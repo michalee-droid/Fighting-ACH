@@ -7,226 +7,66 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #141021;
-      --panel: #221c35;
-      --border: #f4d35e;
-      --accent: #ee6c4d;
-      --hp: #4ade80;
-      --mp: #38bdf8;
-      --text: #f8fafc;
+      --bg: #141021; --panel: #221c35; --border: #f4d35e;
+      --accent: #ee6c4d; --hp: #4ade80; --mp: #38bdf8; --text: #f8fafc;
     }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Press Start 2P', monospace;
-      image-rendering: pixelated;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-    }
-
-    .game-container {
-      width: 100%;
-      max-width: 820px;
-      background: var(--panel);
-      border: 4px solid var(--border);
-      box-shadow: 0 0 0 4px #000, 8px 8px 0 #000;
-      padding: 16px;
-    }
-
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 4px solid #000;
-      padding-bottom: 12px;
-      margin-bottom: 16px;
-      font-size: 11px;
-    }
-
-    .badge {
-      background: #000;
-      color: var(--border);
-      padding: 6px 10px;
-      border: 2px solid var(--border);
-    }
-
-    /* ARENA & SLOT ASSET */
-    .arena {
-      position: relative;
-      height: 290px;
-      /* GANTI BACKGROUND ARENA DI SINI */
-      background-color: #2c2543;
-      background-image: linear-gradient(to bottom, #1e1b33 65%, #3a2e25 65%);
-      background-size: cover;
-      background-position: center;
-      border: 4px solid #000;
-      margin-bottom: 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      padding: 20px 40px;
-      overflow: hidden;
-    }
-
-    .fighter-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 210px;
-      z-index: 2;
-    }
-
-    .hud {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      border: 3px solid #fff;
-      padding: 8px;
-      margin-bottom: 12px;
-      font-size: 9px;
-    }
-
-    .bar-bg {
-      width: 100%;
-      height: 10px;
-      background: #333;
-      border: 2px solid #000;
-      margin-top: 5px;
-    }
-
-    .bar-fill {
-      height: 100%;
-      transition: width 0.3s steps(5);
-    }
-
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Press Start 2P', monospace; image-rendering: pixelated; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 16px; }
+    .game-container { width: 100%; max-width: 820px; background: var(--panel); border: 4px solid var(--border); box-shadow: 0 0 0 4px #000, 8px 8px 0 #000; padding: 16px; }
+    .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 4px solid #000; padding-bottom: 12px; margin-bottom: 16px; font-size: 11px; gap: 8px; flex-wrap: wrap; }
+    .badge { background: #000; color: var(--border); padding: 6px 10px; border: 2px solid var(--border); }
+    .link-btn { background: #2c2445; color: #fff; border: 2px solid #fff; padding: 6px 10px; font-size: 9px; text-decoration: none; }
+    .arena { position: relative; height: 290px; background-color: #2c2543; background-image: linear-gradient(to bottom, #1e1b33 65%, #3a2e25 65%); background-size: cover; background-position: center; border: 4px solid #000; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end; padding: 20px 40px; overflow: hidden; }
+    .fighter-box { display: flex; flex-direction: column; align-items: center; width: 210px; z-index: 2; }
+    .hud { width: 100%; background: rgba(0,0,0,0.85); border: 3px solid #fff; padding: 8px; margin-bottom: 12px; font-size: 9px; }
+    .bar-bg { width: 100%; height: 10px; background: #333; border: 2px solid #000; margin-top: 5px; }
+    .bar-fill { height: 100%; transition: width 0.3s steps(5); }
     .hp-fill { background: var(--hp); }
     .mp-fill { background: var(--mp); }
-
-    /* SLOT GAMBAR KARAKTER */
-    .sprite-slot {
-      width: 110px;
-      height: 110px;
-      border: 3px dashed rgba(255, 255, 255, 0.35);
-      background: rgba(0, 0, 0, 0.35);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-
-    .sprite-slot img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-    }
-
-    /* Animasi Serangan & Terkena Hit */
+    .sprite-slot { width: 110px; height: 110px; border: 3px dashed rgba(255,255,255,0.35); background: rgba(0,0,0,0.35); display: flex; justify-content: center; align-items: center; }
+    .sprite-slot img { width: 100%; height: 100%; object-fit: contain; }
     .lunge-right { animation: lungeR 0.3s steps(3); }
     .lunge-left { animation: lungeL 0.3s steps(3); }
     .hit-shake { animation: shake 0.3s steps(3); filter: brightness(2.5) sepia(1) hue-rotate(-50deg); }
-
     @keyframes lungeR { 50% { transform: translateX(40px); } }
     @keyframes lungeL { 50% { transform: translateX(-40px); } }
-    @keyframes shake {
-      25% { transform: translateX(-8px); }
-      75% { transform: translateX(8px); }
-    }
-
-    /* KONTROL & LOG */
-    .bottom-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    button {
-      background: #332a4d;
-      color: #fff;
-      border: 3px solid #fff;
-      box-shadow: 4px 4px 0 #000;
-      padding: 12px 8px;
-      font-size: 9px;
-      cursor: pointer;
-      text-align: left;
-      line-height: 1.5;
-    }
-
-    button:hover:not(:disabled) {
-      background: var(--border);
-      color: #000;
-    }
-
-    button:active:not(:disabled) {
-      transform: translate(2px, 2px);
-      box-shadow: 2px 2px 0 #000;
-    }
-
-    button:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    .log-box {
-      background: #0d0a14;
-      border: 3px solid #fff;
-      padding: 10px;
-      height: 135px;
-      overflow-y: auto;
-      font-size: 9px;
-      line-height: 1.7;
-    }
-
+    @keyframes shake { 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+    .bottom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    button { background: #332a4d; color: #fff; border: 3px solid #fff; box-shadow: 4px 4px 0 #000; padding: 12px 8px; font-size: 9px; cursor: pointer; text-align: left; line-height: 1.5; }
+    button:hover:not(:disabled) { background: var(--border); color: #000; }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+    .log-box { background: #0d0a14; border: 3px solid #fff; padding: 10px; height: 135px; overflow-y: auto; font-size: 9px; line-height: 1.7; }
     .log-box p { margin-bottom: 6px; }
-    .c-gold { color: var(--border); }
-    .c-red { color: var(--accent); }
-    .c-green { color: var(--hp); }
+    .c-gold { color: var(--border); } .c-red { color: var(--accent); } .c-green { color: var(--hp); }
+    @media (max-width: 640px) { .bottom-grid { grid-template-columns: 1fr; } .arena { padding: 16px; } }
   </style>
 </head>
 <body>
-
 <div class="game-container">
   <div class="header">
     <div>PIXEL ARENA // <span id="user-display" class="c-gold">GUEST</span></div>
-    <div class="badge">WIN STREAK: <span id="win-count">0</span></div>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <a href="index.html" class="link-btn">&lt;&lt; STAT HUB</a>
+      <div class="badge">WINS: <span id="win-count">0</span></div>
+    </div>
   </div>
 
-  <!-- ARENA PERTARUNGAN -->
-  <!-- Tips: Tambahkan style="background-image: url('bg-arena.png');" di div arena jika ingin pakai gambar latar -->
   <div class="arena" id="arena-bg">
-    
-    <!-- KATEGORI 1: PLAYER -->
     <div class="fighter-box">
       <div class="hud">
         <div style="display:flex; justify-content:space-between;">
-          <span>HERO</span>
+          <span id="p-name">KNIGHT</span>
           <span id="p-hp-text">100/100</span>
         </div>
         <div class="bar-bg"><div class="bar-fill hp-fill" id="p-hp-bar" style="width:100%"></div></div>
         <div class="bar-bg"><div class="bar-fill mp-fill" id="p-mp-bar" style="width:100%"></div></div>
       </div>
-      
-      <!-- LETAKKAN FOTO PLAYER DI SRC DI BAWAH INI -->
       <div class="sprite-slot" id="player-sprite">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPfGab4JGC2HzLvYk-Zbrlm3SRN4RX9yV9-Jerfx8KFw&s=10" alt="PLAYER IMG" id="img-player" onerror="this.style.display='none'">
+        <img src="" alt="PLAYER IMG" id="img-player" onerror="this.style.display='none'">
       </div>
     </div>
 
-    <!-- KATEGORI 2: ENEMY -->
     <div class="fighter-box">
       <div class="hud">
         <div style="display:flex; justify-content:space-between;">
@@ -235,32 +75,26 @@
         </div>
         <div class="bar-bg"><div class="bar-fill hp-fill" id="e-hp-bar" style="width:100%"></div></div>
       </div>
-
-      <!-- LETAKKAN FOTO MUSUH DI SRC DI BAWAH INI -->
       <div class="sprite-slot" id="enemy-sprite">
-        <img src="data:image/jpeg;base64,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" alt="ENEMY IMG" id="img-enemy" onerror="this.style.display='none'">
+        <img src="" alt="ENEMY IMG" id="img-enemy" onerror="this.style.display='none'">
       </div>
     </div>
-
   </div>
 
-  <!-- PANEL AKSI & LOG -->
   <div class="bottom-grid">
     <div class="actions" id="action-buttons">
-      <button onclick="playerTurn('slash')">[1] SLASH<br><span class="c-gold">DMG: 18-24</span></button>
-      <button onclick="playerTurn('skill')" id="btn-skill">[2] ULTIMATE<br><span class="c-gold">DMG: 38 | -30MP</span></button>
-      <button onclick="playerTurn('heal')" id="btn-heal">[3] POTION<br><span class="c-green">+30 HP | -20MP</span></button>
+      <button onclick="playerTurn('slash')" id="btn-slash">[1] SLASH</button>
+      <button onclick="playerTurn('skill')" id="btn-skill">[2] ULTIMATE</button>
+      <button onclick="playerTurn('heal')" id="btn-heal">[3] POTION</button>
       <button onclick="resetBattle()" id="btn-reset" style="display:none; background:#15803d;">[R] NEXT BATTLE</button>
     </div>
 
     <div class="log-box" id="battle-log">
-      <p class="c-gold">> Selamat datang di Pixel Arena!</p>
-      <p>> Giliranmu! Pilih aksi di sebelah kiri.</p>
+      <p class="c-gold">&gt; Pertarungan dimulai! Gunakan build stat-mu.</p>
     </div>
   </div>
 </div>
 
-<!-- FIREBASE SDK (MODULAR v10) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -275,73 +109,68 @@
     appId: "1:678921911596:web:ab472bf69bdab235238089"
   };
 
-  // Inisialisasi Firebase
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
   let currentUser = null;
 
-  // Cek Status Login & Ambil Data Kemenangan dari Firestore
   onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      currentUser = user;
-      document.getElementById('user-display').textContent = user.email.split('@')[0].toUpperCase();
-      const docRef = doc(db, "players", user.uid);
-      const snap = await getDoc(docRef);
-      if (snap.exists() && snap.data().wins) {
-        document.getElementById('win-count').textContent = snap.data().wins;
-      }
+    if (!user) return;
+    currentUser = user;
+    document.getElementById('user-display').textContent = user.email.split('@')[0].toUpperCase();
+    const snap = await getDoc(doc(db, "players", user.uid));
+    if (snap.exists()) {
+      const data = snap.data();
+      if (data.wins) document.getElementById('win-count').textContent = data.wins;
+      if (data.build && window.initFromBuild) window.initFromBuild(data.build);
     }
   });
 
-  // Fungsi Simpan Kemenangan ke Firestore (Dipanggil saat Player menang)
   window.saveWinToFirebase = async () => {
     const winEl = document.getElementById('win-count');
     winEl.textContent = parseInt(winEl.textContent) + 1;
-
     if (currentUser) {
-      try {
-        await setDoc(doc(db, "players", currentUser.uid), {
-          email: currentUser.email,
-          wins: increment(1),
-          lastPlayed: new Date().toISOString()
-        }, { merge: true });
-        log("> Data kemenangan tersimpan ke Cloud!", "c-gold");
-      } catch (err) {
-        console.error("Gagal menyimpan ke Firebase:", err);
-      }
+      await setDoc(doc(db, "players", currentUser.uid), {
+        email: currentUser.email,
+        wins: increment(1),
+        lastPlayed: new Date().toISOString()
+      }, { merge: true });
     }
   };
 </script>
 
-<!-- LOGIKA GAME TURN-BASED -->
 <script>
-  // ==========================================
-  // KONFIGURASI ASET GAMBAR (ISI PATH FOTO DI SINI)
-  // ==========================================
+  // KATEGORI GAMBAR TERPADU (SAMAKAN PATH DENGAN INDEX.HTML)
   const ASSETS = {
-    background: "", // Contoh: "assets/bg-castle.png"
-    player: "",     // Contoh: "assets/hero.png"
-    enemy: ""       // Contoh: "assets/boss.png"
+    background: "", // Contoh: "assets/arena.png"
+    classSprites: {
+      knight: "", // Contoh: "assets/knight.png"
+      mage: "",   // Contoh: "assets/mage.png"
+      rogue: ""   // Contoh: "assets/rogue.png"
+    },
+    enemySprites: {
+      dark_knight: "" // Contoh: "assets/boss.png"
+    }
   };
 
-  // Terapkan aset jika sudah diisi
   if (ASSETS.background) document.getElementById('arena-bg').style.backgroundImage = `url('${ASSETS.background}')`;
-  if (ASSETS.player) { const img = document.getElementById('img-player'); img.src = ASSETS.player; img.style.display = 'block'; }
-  if (ASSETS.enemy) { const img = document.getElementById('img-enemy'); img.src = ASSETS.enemy; img.style.display = 'block'; }
+  if (ASSETS.enemySprites.dark_knight) {
+    const eImg = document.getElementById('img-enemy');
+    eImg.src = ASSETS.enemySprites.dark_knight;
+    eImg.style.display = 'block';
+  }
 
-  // ==========================================
-  // STATE PERTARUNGAN
-  // ==========================================
   let state = {
-    pHp: 100, pMaxHp: 100, pMp: 100,
+    heroClass: 'knight',
+    pHp: 100, pMaxHp: 100,
+    pMp: 100, pMaxMp: 100,
+    bonusAtk: 15,
     eHp: 120, eMaxHp: 120,
     isPlayerTurn: true,
     gameOver: false
   };
 
   const logBox = document.getElementById('battle-log');
-
   function log(msg, cls = "") {
     const p = document.createElement('p');
     if (cls) p.className = cls;
@@ -350,12 +179,49 @@
     logBox.scrollTop = logBox.scrollHeight;
   }
 
+  function applyPlayerSprite(heroClass, customSprite = "") {
+    const src = customSprite || ASSETS.classSprites[heroClass] || "";
+    const pImg = document.getElementById('img-player');
+    if (src) {
+      pImg.src = src;
+      pImg.style.display = 'block';
+    } else {
+      pImg.style.display = 'none';
+    }
+  }
+
+  function initFromBuild(build) {
+    const maxHp = build.maxHp || ((build.vit || 5) * 20);
+    const maxMp = build.maxMp || ((build.int || 5) * 20);
+    const bonusAtk = typeof build.bonusAtk === 'number' ? build.bonusAtk : ((build.str || 5) * 3);
+    const heroClass = build.heroClass || 'knight';
+
+    state = {
+      ...state,
+      heroClass,
+      pHp: maxHp, pMaxHp: maxHp,
+      pMp: maxMp, pMaxMp: maxMp,
+      bonusAtk,
+      eHp: 120, eMaxHp: 120,
+      isPlayerTurn: true,
+      gameOver: false
+    };
+
+    document.getElementById('p-name').textContent = heroClass.toUpperCase();
+    applyPlayerSprite(heroClass, build.sprite);
+    updateUI();
+  }
+
   function updateUI() {
     document.getElementById('p-hp-text').textContent = `${Math.max(0, state.pHp)}/${state.pMaxHp}`;
     document.getElementById('e-hp-text').textContent = `${Math.max(0, state.eHp)}/${state.eMaxHp}`;
     document.getElementById('p-hp-bar').style.width = `${Math.max(0, (state.pHp / state.pMaxHp) * 100)}%`;
-    document.getElementById('p-mp-bar').style.width = `${Math.max(0, state.pMp)}%`;
+    document.getElementById('p-mp-bar').style.width = `${Math.max(0, (state.pMp / state.pMaxMp) * 100)}%`;
     document.getElementById('e-hp-bar').style.width = `${Math.max(0, (state.eHp / state.eMaxHp) * 100)}%`;
+
+    document.getElementById('btn-slash').innerHTML = `[1] SLASH<br><span class="c-gold">DMG: ${18 + state.bonusAtk}-${24 + state.bonusAtk}</span>`;
+    document.getElementById('btn-skill').innerHTML = `[2] ULTIMATE<br><span class="c-gold">DMG: ${38 + state.bonusAtk} | -30MP</span>`;
+    document.getElementById('btn-heal').innerHTML = `[3] POTION<br><span class="c-green">+30 HP | -20MP</span>`;
 
     const disableBtns = !state.isPlayerTurn || state.gameOver;
     document.querySelectorAll('#action-buttons button:not(#btn-reset)').forEach(b => b.disabled = disableBtns);
@@ -383,27 +249,25 @@
     state.isPlayerTurn = false;
 
     if (type === 'slash') {
-      const dmg = Math.floor(Math.random() * 7) + 18;
+      const dmg = Math.floor(Math.random() * 7) + 18 + state.bonusAtk;
       state.eHp -= dmg;
-      state.pMp = Math.min(100, state.pMp + 10);
+      state.pMp = Math.min(state.pMaxMp, state.pMp + 10);
       animateHit('player-sprite', 'enemy-sprite');
-      log(`> HERO menyerang! -${dmg} HP musuh.`, "c-gold");
-    } 
-    else if (type === 'skill' && state.pMp >= 30) {
+      log(`&gt; ${state.heroClass.toUpperCase()} menyerang! -${dmg} HP musuh.`, "c-gold");
+    } else if (type === 'skill' && state.pMp >= 30) {
+      const dmg = 38 + state.bonusAtk;
       state.pMp -= 30;
-      state.eHp -= 38;
+      state.eHp -= dmg;
       animateHit('player-sprite', 'enemy-sprite');
-      log(`> ULTIMATE SLASH! Critical -38 HP!`, "c-gold");
-    } 
-    else if (type === 'heal' && state.pMp >= 20) {
+      log(`&gt; ULTIMATE! -${dmg} HP musuh!`, "c-gold");
+    } else if (type === 'heal' && state.pMp >= 20) {
       state.pMp -= 20;
       state.pHp = Math.min(state.pMaxHp, state.pHp + 30);
-      log(`> HERO meminum potion (+30 HP).`, "c-green");
+      log(`&gt; Potion dipakai (+30 HP).`, "c-green");
     }
 
     updateUI();
-    if (checkEndGame()) return;
-    setTimeout(enemyTurn, 900);
+    if (!checkEndGame()) setTimeout(enemyTurn, 900);
   }
 
   function enemyTurn() {
@@ -411,20 +275,16 @@
     const isHeavy = Math.random() > 0.7;
     const dmg = isHeavy ? 26 : Math.floor(Math.random() * 6) + 12;
     state.pHp -= dmg;
-
     animateHit('enemy-sprite', 'player-sprite');
-    log(isHeavy ? `> MUSUH mengamuk! Heavy hit -${dmg} HP!` : `> MUSUH membalas serangan (-${dmg} HP).`, "c-red");
-
-    if (!checkEndGame()) {
-      state.isPlayerTurn = true;
-    }
+    log(isHeavy ? `&gt; MUSUH heavy hit -${dmg} HP!` : `&gt; MUSUH membalas -${dmg} HP.`, "c-red");
+    if (!checkEndGame()) state.isPlayerTurn = true;
     updateUI();
   }
 
   function checkEndGame() {
     if (state.eHp <= 0) {
       state.gameOver = true;
-      log("> VICTORY! Musuh dikalahkan!", "c-green");
+      log("&gt; VICTORY! Musuh dikalahkan!", "c-green");
       document.getElementById('btn-reset').style.display = 'block';
       if (window.saveWinToFirebase) window.saveWinToFirebase();
       updateUI();
@@ -432,7 +292,7 @@
     }
     if (state.pHp <= 0) {
       state.gameOver = true;
-      log("> DEFEAT! Kamu tumbang di arena...", "c-red");
+      log("&gt; DEFEAT! Kamu tumbang...", "c-red");
       document.getElementById('btn-reset').style.display = 'block';
       updateUI();
       return true;
@@ -441,12 +301,21 @@
   }
 
   function resetBattle() {
-    state = { pHp: 100, pMaxHp: 100, pMp: 100, eHp: 120, eMaxHp: 120, isPlayerTurn: true, gameOver: false };
+    state.pHp = state.pMaxHp;
+    state.pMp = state.pMaxMp;
+    state.eHp = state.eMaxHp;
+    state.isPlayerTurn = true;
+    state.gameOver = false;
     document.getElementById('btn-reset').style.display = 'none';
-    logBox.innerHTML = `<p class="c-gold">> Pertarungan baru dimulai!</p>`;
+    logBox.innerHTML = `<p class="c-gold">&gt; Pertarungan baru dimulai!</p>`;
     updateUI();
   }
 
+  const savedLocal = localStorage.getItem('pixel_hero_build');
+  if (savedLocal) {
+    try { initFromBuild(JSON.parse(savedLocal)); } catch {}
+  }
+  applyPlayerSprite(state.heroClass);
   updateUI();
 </script>
 </body>
