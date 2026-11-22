@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PIXEL ARENA — Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #141021; --panel: #221c35; --border: #f4d35e;
+      --accent: #ee6c4d; --hp: #4ade80; --text: #f8fafc;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Press Start+2P', monospace; image-rendering: pixelated; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 16px; }
+    .box { width: 100%; max-width: 440px; background: var(--panel); border: 4px solid var(--border); box-shadow: 0 0 0 4px #000, 8px 8px 0 #000; padding: 20px; }
+    .title { text-align: center; font-size: 15px; color: var(--border); margin-bottom: 6px; }
+    .subtitle { text-align: center; font-size: 8px; color: #cbd5e1; margin-bottom: 18px; }
+    .field { margin-bottom: 12px; }
+    label { display: block; font-size: 8px; margin-bottom: 6px; color: var(--border); }
+    input { width: 100%; background: #141021; color: #fff; border: 3px solid #fff; padding: 10px; font-size: 9px; outline: none; }
+    input:focus { border-color: var(--border); }
+    .btn-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    button { width: 100%; padding: 11px 8px; font-size: 9px; border: 3px solid #fff; box-shadow: 3px 3px 0 #000; cursor: pointer; color: #fff; }
+    button:hover:not(:disabled) { filter: brightness(1.12); }
+    button:active:not(:disabled) { transform: translate(2px, 2px); box-shadow: 1px 1px 0 #000; }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-login { background: #16a34a; }
+    .btn-reg { background: #2563eb; }
+    .btn-google { background: #3b305c; margin-top: 10px; color: var(--border); }
+    .btn-guest { background: transparent; border-style: dashed; color: #cbd5e1; margin-top: 10px; box-shadow: none; }
+    .status { margin-top: 12px; font-size: 8px; line-height: 1.6; min-height: 24px; text-align: center; }
+    .c-err { color: var(--accent); }
+    .c-ok { color: var(--hp); }
+  </style>
+</head>
+<body>
+<div class="box">
+  <div class="title">PIXEL ARENA</div>
+  <div class="subtitle">MASUK UNTUK MENYIMPAN STAT &amp; WINS</div>
+
+  <div class="field">
+    <label for="email">EMAIL</label>
+    <input type="email" id="email" placeholder="hero@email.com" autocomplete="email" />
+  </div>
+
+  <div class="field">
+    <label for="password">PASSWORD</label>
+    <input type="password" id="password" placeholder="Minimal 6 karakter" autocomplete="current-password" />
+  </div>
+
+  <div class="btn-group">
+    <button class="btn-login" id="btn-login" type="button">LOGIN</button>
+    <button class="btn-reg" id="btn-register" type="button">DAFTAR</button>
+  </div>
+
+  <button class="btn-google" id="btn-google" type="button">MASUK DENGAN GOOGLE</button>
+  <button class="btn-guest" id="btn-guest" type="button">MAIN SEBAGAI GUEST &gt;&gt;</button>
+
+  <div class="status" id="status-msg"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    GoogleAuthProvider,
+    signInWithPopup,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCVb25GT74o9wocY0Qptlw_KpFIYtOsfVc",
+    authDomain: "anything-9d56e.firebaseapp.com",
+    projectId: "anything-9d56e",
+    storageBucket: "anything-9d56e.firebasestorage.app",
+    messagingSenderId: "678921911596",
+    appId: "1:678921911596:web:ab472bf69bdab235238089"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+  const provider = new GoogleAuthProvider();
+
+  const statusEl = document.getElementById("status-msg");
+  const buttons = document.querySelectorAll("button");
+
+  function setStatus(msg, isError = false) {
+    statusEl.textContent = msg;
+    statusEl.className = "status " + (isError ? "c-err" : "c-ok");
+  }
+
+  function setBusy(busy) {
+    buttons.forEach((b) => (b.disabled = busy));
+  }
+
+  async function ensurePlayerDoc(user) {
+    const ref = doc(db, "players", user.uid);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      await setDoc(ref, {
+        email: user.email || "",
+        wins: 0,
+        createdAt: new Date().toISOString()
+      }, { merge: true });
+    }
+  }
+
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      try {
+        await ensurePlayerDoc(user);
+      } catch (e) {
+        console.warn("Gagal inisialisasi dokumen awal:", e);
+      }
+      window.location.href = "index.html";
+    }
+  });
+
+  document.getElementById("btn-login").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("password").value;
+    if (!email || !pass) return setStatus("Isi email dan password dulu.", true);
+
+    setBusy(true);
+    setStatus("Memproses login...");
+    try {
+      await signInWithEmailAndPassword(auth, email, pass);
+    } catch (err) {
+      setStatus(err.message.replace("Firebase: ", ""), true);
+      setBusy(false);
+    }
+  });
+
+  document.getElementById("btn-register").addEventListener("click", async () => {
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("password").value;
+    if (!email || pass.length < 6) return setStatus("Email valid & password min. 6 karakter.", true);
+
+    setBusy(true);
+    setStatus("Mendaftarkan akun...");
+    try {
+      const cred = await createUserWithEmailAndPassword(auth, email, pass);
+      await ensurePlayerDoc(cred.user);
+    } catch (err) {
+      setStatus(err.message.replace("Firebase: ", ""), true);
+      setBusy(false);
+    }
+  });
+
+  document.getElementById("btn-google").addEventListener("click", async () => {
+    setBusy(true);
+    setStatus("Membuka Google Sign-In...");
+    try {
+      const cred = await signInWithPopup(auth, provider);
+      await ensurePlayerDoc(cred.user);
+    } catch (err) {
+      setStatus(err.message.replace("Firebase: ", ""), true);
+      setBusy(false);
+    }
+  });
+
+  document.getElementById("btn-guest").addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+</script>
+</body>
+</html>
